@@ -1,0 +1,44 @@
+# Project settings. Every script reads this file.
+# Relative paths are read from the repo root (the folder of this file).
+
+# Folder with the CirCor files (.txt, .wav, .hea, .tsv).
+# Windows example: "C:/Users/you/data/circor/training_data"
+# (forward slashes work on Windows too).
+data_dir: C:\Users\DELL\Desktop\TPs_ML\the-circor-digiscope-phonocardiogram-dataset-1.0.3\the-circor-digiscope-phonocardiogram-dataset-1.0.3/training_data
+
+# Generated files. outputs/ is ignored by git (big files, model weights).
+output_dir: outputs
+figures_dir: figures
+reports_dir: reports
+
+# Fixed seed for every random step (split, models, sampling).
+seed: 42
+
+audio:
+  original_sr: 4000      # sampling rate of the raw files (Hz)
+  target_sr: 2000        # we resample to this (enough for heart sounds < 1000 Hz)
+  bandpass_low: 25       # Hz, removes very low rumble and body movement
+  bandpass_high: 400     # Hz, most murmur energy is below this
+
+windows:
+  length_s: 5.0          # one window = 5 seconds (about 4-6 heart beats)
+  overlap: 0.5           # 50% overlap between windows
+  # Each recording is scaled to std = 1, so window RMS is relative to its recording.
+  silent_rms: 0.3        # RMS below this = (almost) silent window, dropped
+  noisy_rms: 2.0         # RMS above this = big noise burst, dropped
+
+features:                # spectrogram settings at 2000 Hz
+  n_fft: 256             # 128 ms analysis window
+  hop: 64                # 32 ms step -> 157 frames per 5 s window
+  n_mels: 32             # mel bands between 25 and 400 Hz
+  n_mfcc: 13
+
+split:                   # split by child_id, stratified on the murmur label
+  train: 0.70
+  val: 0.15
+  test: 0.15
+
+audit:                   # thresholds used to flag bad recordings
+  min_duration_s: 5.0    # shorter than one window = "very short"
+  silent_rms: 1.0e-4     # RMS below this = "silent"
+  clip_fraction: 0.01    # more than 1% of samples at full scale = "clipped"

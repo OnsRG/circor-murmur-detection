@@ -1,0 +1,23 @@
+# Data: never commit it (license + size). Download it from PhysioNet.
+data/
+*.wav
+*.hea
+*.tsv
+
+# Generated files and model weights
+outputs/
+*.npy
+*.pt
+*.pth
+*.joblib
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+__MACOSX/
